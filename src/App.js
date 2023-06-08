@@ -2,16 +2,37 @@ import { useEffect, useState } from 'react';
 import { getCords, getWeatherData } from './services/weather';
 
 function App() {
-  const [data, setData] = useState({ temperature: 20, name: 'Rohrbach-Berg', country: 'Austria' });
+  const [data, setData] = useState({ temperature: 0, name: '', country: '' });
   const [location, setLocation] = useState('Rohrbach-Berg');
-  const [value, setValue] = useState('Rohrbach-Berg');
-  const [latitude] = useState(48.57);
-  const [longitude] = useState(13.97);
+  const [value, setValue] = useState();
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
   const [error, setError] = useState(false);
 
   const handleChange = (e) => {
     setValue(e.target.value);
   };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const lon = position.coords.longitude.toFixed(2);
+      const lat = position.coords.latitude.toFixed(2);
+      setLatitude(lat);
+      setLongitude(lon);
+      console.log(latitude, longitude);
+
+      getWeatherData(lat, lon)
+        .then((response) => {
+          const weatherData = response;
+          setData({ ...data, temperature: weatherData.main.temp, name: weatherData.name, country: weatherData.sys.country });
+        })
+        .catch((e) => {
+          if (e.response.data.cod === '400') {
+            setError(true);
+          }
+        });
+    });
+  }, [latitude, longitude]);
 
   const onChangeLocation = (e) => {
     e.preventDefault();
@@ -42,18 +63,18 @@ function App() {
       });
   };
 
-  useEffect(() => {
-    getWeatherData(latitude, longitude)
-      .then((response) => {
-        const weatherData = response;
-        setData({ ...data, temperature: weatherData.main.temp, name: weatherData.name, country: weatherData.sys.country });
-      })
-      .catch((e) => {
-        if (e.response.data.cod === '400') {
-          setError(true);
-        }
-      });
-  }, []);
+  // useEffect(() => {
+  //   getWeatherData(latitude, longitude)
+  //     .then((response) => {
+  //       const weatherData = response;
+  //       setData({ ...data, temperature: weatherData.main.temp, name: weatherData.name, country: weatherData.sys.country });
+  //     })
+  //     .catch((e) => {
+  //       if (e.response.data.cod === '400') {
+  //         setError(true);
+  //       }
+  //     });
+  // }, []);
 
   return (
     <>
