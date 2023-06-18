@@ -10,12 +10,12 @@ function SearchField({ setEnteredLocation }) {
   const handleLocationSearch = (e) => {
     e.preventDefault();
     setEnteredLocation(value);
-    setValue('');
+    setValue(' ');
   };
 
   return (
     <form>
-      <input type='search' value={value} placeholder='Enter location' onChange={handleValueChange} />
+      <input type='search' value={value || ''} placeholder='Enter location' onChange={handleValueChange} />
       <button type='submit' onClick={handleLocationSearch}>
         Find
       </button>

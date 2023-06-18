@@ -1,10 +1,10 @@
-import CurrentWeather from './components/currentWeather/CurrentWeather';
+import CurrentWeatherInfo from './components/currentWeatherInfo/CurrentWeatherInfo';
 
 function App() {
   return (
     <>
       <div>Weather app</div>
-      <CurrentWeather />
+      <CurrentWeatherInfo />
     </>
   );
 }

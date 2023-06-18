@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { getCords, getWeatherData } from '../../services/weather';
 import SearchField from './SearchField';
 
-function CurrentWeather() {
+function CurrentWeatherInfo() {
   const [data, setData] = useState({ temperature: 0, name: '', country: '' });
-  const [location, setLocation] = useState('Rohrbach-Berg');
+  const [location, setLocation] = useState();
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
   const [error, setError] = useState(false);
@@ -20,6 +20,7 @@ function CurrentWeather() {
       getWeatherData(lat, lon)
         .then((response) => {
           const weatherData = response;
+          setLocation(weatherData.name);
           setData({ ...data, temperature: weatherData.main.temp, name: weatherData.name, country: weatherData.sys.country });
         })
         .catch((e) => {
@@ -72,4 +73,4 @@ function CurrentWeather() {
     </>
   );
 }
-export default CurrentWeather;
+export default CurrentWeatherInfo;
