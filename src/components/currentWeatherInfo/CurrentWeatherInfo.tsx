@@ -1,9 +1,23 @@
 import { useEffect, useState } from 'react'
-import { getCords, getWeatherData } from '../../services/weather'
+import { CurrentWeatherData } from 'services/models'
+import { getCords, getWeatherData } from 'services/weather.service'
 import SearchField from './SearchField'
 
 function CurrentWeatherInfo() {
-  const [data, setData] = useState({ temperature: 0, name: '', country: '' })
+  const [data, setData] = useState<CurrentWeatherData>({
+    temperature: 0,
+    name: ' ',
+    country: ' ',
+    sunrise: 0,
+    sunset: 0,
+    conditions: '',
+    conditionsDescription: '',
+    windSpeed: 0,
+    feelsLike: 0,
+    humidity: 0,
+    temp_min: 0,
+    temp_max: 0
+  })
   const [location, setLocation] = useState<string>('')
   const [latitude, setLatitude] = useState<string>()
   const [longitude, setLongitude] = useState<string>()
@@ -15,13 +29,11 @@ function CurrentWeatherInfo() {
       const lat = position.coords.latitude.toFixed(2)
       setLatitude(lat)
       setLongitude(lon)
-      console.log(latitude, longitude)
 
       getWeatherData(lat, lon)
-        .then((response) => {
-          const weatherData = response
+        .then((weatherData) => {
           setLocation(weatherData.name)
-          setData({ ...data, temperature: weatherData.main.temp, name: weatherData.name, country: weatherData.sys.country })
+          setData(weatherData)
         })
         .catch((e) => {
           if (e.response.data.cod === '400') {
@@ -43,9 +55,8 @@ function CurrentWeatherInfo() {
         const lon = response[0].lon
 
         getWeatherData(lat, lon)
-          .then((response) => {
-            const weatherData = response
-            setData({ ...data, temperature: weatherData.main.temp, name: location, country: weatherData.sys.country })
+          .then((weatherData) => {
+            setData(weatherData)
           })
           .catch(() => {
             setError(true)
@@ -68,6 +79,15 @@ function CurrentWeatherInfo() {
             {location}, {data.country}
           </div>
           <div>{data && data.temperature}</div>
+          <div>Sunrise: {data.sunrise}</div>
+          <div>Sunset: {data.sunset}</div>
+          <div>Conditions{data.conditions}</div>
+          <div>Conditions description: {data.conditionsDescription}</div>
+          <div>Wind speed{data.windSpeed}</div>
+          <div>Feel like: {data.feelsLike}</div>
+          <div>Humidity{data.humidity}</div>
+          <div>Temp max{data.temp_max}</div>
+          <div>Temp min{data.temp_min}</div>
         </>
       )}
     </>
