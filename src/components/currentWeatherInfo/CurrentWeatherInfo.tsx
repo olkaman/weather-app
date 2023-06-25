@@ -70,7 +70,7 @@ function CurrentWeatherInfo() {
   return (
     <>
       <SearchField setEnteredLocation={onChangeLocation} />
-
+      <div>Hallo</div>
       {error ? (
         <span>No such location</span>
       ) : (
