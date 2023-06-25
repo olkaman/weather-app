@@ -2,7 +2,7 @@ import axios from 'axios'
 import { CurrentWeatherData } from './models'
 
 export async function getCords(location: string) {
-  const locationUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=5a1adfc499e200023cd45fa041b63b95`
+  const locationUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=5a1adfc499e200023cd45fa041b63b95`
   const response = await axios.get(locationUrl)
   return response.data
 }
