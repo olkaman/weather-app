@@ -1,39 +1,28 @@
 import { useEffect, useState } from 'react'
-import { CurrentWeatherData } from 'services/models'
-import { getCords, getWeatherData } from 'services/weather.service'
+import { getCords, getCurrentWeatherData } from 'services/weather.service'
+import { useCurrentWeatherData, useWeatherStore } from 'stores/weatherStore'
+
 import SearchField from './SearchField'
 
-function CurrentWeatherInfo() {
-  const [data, setData] = useState<CurrentWeatherData>({
-    temperature: 0,
-    name: ' ',
-    country: ' ',
-    sunrise: 0,
-    sunset: 0,
-    conditions: '',
-    conditionsDescription: '',
-    windSpeed: 0,
-    feelsLike: 0,
-    humidity: 0,
-    temp_min: 0,
-    temp_max: 0
-  })
+function WeatherInfo() {
   const [location, setLocation] = useState<string>('')
   const [latitude, setLatitude] = useState<string>()
   const [longitude, setLongitude] = useState<string>()
   const [error, setError] = useState(false)
+  const setCurrentWeather = useWeatherStore((state) => state.setCurrentWeather)
+  const currentWeather = useCurrentWeatherData()
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      const lon = position.coords.longitude.toFixed(2)
-      const lat = position.coords.latitude.toFixed(2)
+      const lon = position.coords.longitude.toFixed(10)
+      const lat = position.coords.latitude.toFixed(10)
+
       setLatitude(lat)
       setLongitude(lon)
-
-      getWeatherData(lat, lon)
+      getCurrentWeatherData(lat, lon)
         .then((weatherData) => {
           setLocation(weatherData.name)
-          setData(weatherData)
+          setCurrentWeather(weatherData)
         })
         .catch((e) => {
           if (e.response.data.cod === '400') {
@@ -54,9 +43,9 @@ function CurrentWeatherInfo() {
         const lat = response[0].lat
         const lon = response[0].lon
 
-        getWeatherData(lat, lon)
+        getCurrentWeatherData(lat, lon)
           .then((weatherData) => {
-            setData(weatherData)
+            setCurrentWeather({ ...weatherData, name: value })
           })
           .catch(() => {
             setError(true)
@@ -75,21 +64,20 @@ function CurrentWeatherInfo() {
       ) : (
         <>
           <div>
-            {location}, {data.country}
+            {location}, {currentWeather.country}
           </div>
-          <div>{data && data.temperature}</div>
-          <div>Sunrise: {data.sunrise}</div>
-          <div>Sunset: {data.sunset}</div>
-          <div>Conditions{data.conditions}</div>
-          <div>Conditions description: {data.conditionsDescription}</div>
-          <div>Wind speed{data.windSpeed}</div>
-          <div>Feel like: {data.feelsLike}</div>
-          <div>Humidity{data.humidity}</div>
-          <div>Temp max{data.temp_max}</div>
-          <div>Temp min{data.temp_min}</div>
+          <div>{currentWeather && currentWeather.temperature}</div>
+          <div>Sunrise: {currentWeather.sunrise}</div>
+          <div>Sunset: {currentWeather.sunset}</div>
+          <div>Conditions description: {currentWeather.conditionsDescription}</div>
+          <div>Wind speed: {currentWeather.windSpeed}</div>
+          <div>Feel like: {currentWeather.feelsLike}</div>
+          <div>Humidity: {currentWeather.humidity}</div>
+          <div>Temp max: {currentWeather.temp_max}</div>
+          <div>Temp min: {currentWeather.temp_min}</div>
         </>
       )}
     </>
   )
 }
-export default CurrentWeatherInfo
+export default WeatherInfo

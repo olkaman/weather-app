@@ -2,8 +2,8 @@ export type CurrentWeatherData = {
   temperature: number
   name: string
   country: string
-  sunrise: number
-  sunset: number
+  sunrise: string
+  sunset: string
   conditions: string
   conditionsDescription: string
   windSpeed: number

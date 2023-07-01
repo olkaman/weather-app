@@ -1,4 +1,5 @@
 import axios from 'axios'
+import moment from 'moment'
 import { CurrentWeatherData } from './models'
 
 export async function getCords(location: string) {
@@ -7,16 +8,17 @@ export async function getCords(location: string) {
   return response.data
 }
 
-export async function getWeatherData(latitude: string, longitude: string) {
+export async function getCurrentWeatherData(latitude: string, longitude: string) {
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=5a1adfc499e200023cd45fa041b63b95`
   const response = await axios.get(url)
   const data = response.data
+  console.log(response.data)
   const weatherData: CurrentWeatherData = {
     temperature: data.main.temp,
     name: data.name,
     country: data.sys.country,
-    sunrise: data.sys.sunrise,
-    sunset: data.sys.sunset,
+    sunrise: moment.unix(data.sys.sunrise).format('HH:MM'),
+    sunset: moment.unix(data.sys.sunset).format('HH:MM'),
     conditions: data.weather[0].main,
     conditionsDescription: data.weather[0].description,
     windSpeed: data.wind.speed,
