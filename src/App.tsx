@@ -1,11 +1,14 @@
+import Container from 'components/Container'
 import WeatherInfo from './components/currentWeatherInfo/WeatherInfo'
 
 function App() {
   return (
-    <>
-      <div>Weather app</div>
-      <WeatherInfo />
-    </>
+    <Container>
+      <>
+        <div>Weather app</div>
+        <WeatherInfo />
+      </>
+    </Container>
   )
 }
 
