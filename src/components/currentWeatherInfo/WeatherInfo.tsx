@@ -1,36 +1,18 @@
 import { useEffect, useState } from 'react'
 import { getCords, getCurrentWeatherData } from 'services/weather.service'
-import { useCurrentWeatherData, useWeatherStore } from 'stores/weatherStore'
+import { useCurrentWeatherData, useLocation, useWeatherStore } from 'stores/weatherStore'
 
 import SearchField from './SearchField'
 
 function WeatherInfo() {
-  const [location, setLocation] = useState<string>('')
+  // const [location, setLocation] = useState<string>('')
+  const setLocation = useWeatherStore((state) => state.setLocation)
+  const location1 = useLocation()
   const [latitude, setLatitude] = useState<string>()
   const [longitude, setLongitude] = useState<string>()
   const [error, setError] = useState(false)
   const setCurrentWeather = useWeatherStore((state) => state.setCurrentWeather)
   const currentWeather = useCurrentWeatherData()
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const lon = position.coords.longitude.toFixed(10)
-      const lat = position.coords.latitude.toFixed(10)
-
-      setLatitude(lat)
-      setLongitude(lon)
-      getCurrentWeatherData(lat, lon)
-        .then((weatherData) => {
-          setLocation(weatherData.name)
-          setCurrentWeather(weatherData)
-        })
-        .catch((e) => {
-          if (e.response.data.cod === '400') {
-            setError(true)
-          }
-        })
-    })
-  }, [latitude, longitude])
 
   const onChangeLocation = (value: string) => {
     setLocation(value)
@@ -64,7 +46,7 @@ function WeatherInfo() {
       ) : (
         <>
           <div>
-            {location}, {currentWeather.country}
+            {currentWeather.name}, {currentWeather.country}
           </div>
           <div>{currentWeather && currentWeather.temperature}</div>
           <div>Sunrise: {currentWeather.sunrise}</div>
