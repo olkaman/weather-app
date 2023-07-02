@@ -1,3 +1,4 @@
+import FeedbackMessage from 'components/FeedbackMessage'
 import { useEffect, useState } from 'react'
 import { getCords, getCurrentWeatherData } from 'services/weather.service'
 import { useCurrentWeatherData, useLocation, useWeatherStore } from 'stores/weatherStore'
@@ -6,10 +7,11 @@ import SearchField from './SearchField'
 
 function WeatherInfo() {
   // const [location, setLocation] = useState<string>('')
+  const [showErrorToast, setShowErrorToast] = useState(false)
   const setLocation = useWeatherStore((state) => state.setLocation)
-  const location1 = useLocation()
-  const [latitude, setLatitude] = useState<string>()
-  const [longitude, setLongitude] = useState<string>()
+  // const location1 = useLocation()
+  // const [latitude, setLatitude] = useState<string>()
+  // const [longitude, setLongitude] = useState<string>()
   const [error, setError] = useState(false)
   const setCurrentWeather = useWeatherStore((state) => state.setCurrentWeather)
   const currentWeather = useCurrentWeatherData()
@@ -30,10 +32,12 @@ function WeatherInfo() {
             setCurrentWeather({ ...weatherData, name: value })
           })
           .catch(() => {
+            setShowErrorToast(true)
             setError(true)
           })
       })
       .catch(() => {
+        setShowErrorToast(true)
         setError(true)
       })
   }
@@ -57,6 +61,7 @@ function WeatherInfo() {
           <div>Humidity: {currentWeather.humidity}</div>
           <div>Temp max: {currentWeather.temp_max}</div>
           <div>Temp min: {currentWeather.temp_min}</div>
+          <FeedbackMessage type='danger' message={'Current location was not found'} showToast={showErrorToast} setShowToast={() => setShowErrorToast(false)} />
         </>
       )}
     </>

@@ -1,11 +1,14 @@
 import Container from 'components/Container'
 import { useEffect, useState } from 'react'
 import { getCurrentWeatherData } from 'services/weather.service'
-import { useLatitude, useLocation, useLongitude, useWeatherStore } from 'stores/weatherStore'
+import { useLatitude, useLongitude, useWeatherStore } from 'stores/weatherStore'
 import WeatherInfo from './components/currentWeatherInfo/WeatherInfo'
+import 'styles/appStyles.scss'
+import 'styles/globalStyles.scss'
+import FeedbackMessage from 'components/FeedbackMessage'
 
 function App() {
-  const [error, setError] = useState(false)
+  const [showToast, setShowToast] = useState(false)
   const setLatitude = useWeatherStore((state) => state.setLatitude)
   const setLongitude = useWeatherStore((state) => state.setLongitude)
   const setLocation = useWeatherStore((state) => state.setLocation)
@@ -27,17 +30,19 @@ function App() {
         })
         .catch((e) => {
           if (e.response.data.cod === '400') {
-            setError(true)
+            setShowToast(true)
           }
         })
+        .finally(() => {})
     })
   }, [latitude, longitude])
 
   return (
     <Container>
       <>
-        <div>Weather app</div>
+        <div className='red'>Weather app</div>
         <WeatherInfo />
+        <FeedbackMessage type='danger' message={'Current location was not found'} showToast={showToast} setShowToast={() => setShowToast(false)} />
       </>
     </Container>
   )
