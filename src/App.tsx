@@ -2,7 +2,7 @@ import Container from 'components/Container'
 import { useEffect, useState } from 'react'
 import { getCords, getCurrentWeatherData } from 'services/weather.service'
 import { useLatitude, useLongitude, useWeatherStore } from 'stores/weatherStore'
-import CuurentWeatherInfo from './components/CuurentWeatherInfo'
+import CurrentWeatherInfo from './components/CurrentWeatherInfo'
 import 'styles/appStyles.scss'
 import 'styles/globalStyles.scss'
 import FeedbackMessage from 'components/FeedbackMessage'
@@ -70,7 +70,7 @@ function App() {
       <>
         <div className='red'>Weather app</div>
         <SearchField setEnteredLocation={onChangeLocation} />
-        <CuurentWeatherInfo locationNotFound={error} />
+        <CurrentWeatherInfo locationNotFound={error} />
         <FeedbackMessage type='danger' message={'Current location was not found'} showToast={showToast} setShowToast={() => setShowToast(false)} />
       </>
     </Container>

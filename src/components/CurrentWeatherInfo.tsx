@@ -1,6 +1,6 @@
 import { useCurrentWeatherData } from 'stores/weatherStore'
 
-function CuurentWeatherInfo(props: { locationNotFound: boolean }) {
+function CurrentWeatherInfo(props: { locationNotFound: boolean }) {
   const { locationNotFound } = props
   const currentWeather = useCurrentWeatherData()
 
@@ -27,4 +27,4 @@ function CuurentWeatherInfo(props: { locationNotFound: boolean }) {
     </>
   )
 }
-export default CuurentWeatherInfo
+export default CurrentWeatherInfo
